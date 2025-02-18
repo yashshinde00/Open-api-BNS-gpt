@@ -1,31 +1,6 @@
-# Core libraries
-langchain
-langchain_community
-langchainhub
-# PDF processing
-PyPDF2
-pypdf
-# Vector storage and retrieval
-chromadb
-faiss-cpu
-# OpenAI and embeddings
-openai
-tiktoken
-# Cassandra/AstraDB integration
-cassio
-cassandra-driver
-# Hugging Face (Mistral models and sentence transformers)
-transformers
-torch
-sentence-transformers
-datasets
-
-# Environment management
-python-dotenv
-
-# Typing utilities
-typing_extensions
-
-chainlit
-accelerate>=0.26.0
-optimum
+chainlit==2.2.1
+langchain==0.3.19
+openai==1.63.2
+transformers==4.49.0
+python-dotenv==1.0.1
+langchain-astradb==0.0.1
