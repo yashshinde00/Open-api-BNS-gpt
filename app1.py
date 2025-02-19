@@ -23,19 +23,30 @@ async def main(message: cl.Message):
         return
 
     try:
+        # Step 1: Retrieve relevant documents
         similar_docs = similarity_search(user_message, k=3)
 
         if not similar_docs:
-            await cl.Message(content="😕 No relevant documents found. Try another query.").send()
+            await cl.Message(content="😕 No relevant documents found. Try rephrasing your question or asking about a specific legal topic.").send()
             return
 
-        # Prepare the context from similar documents
-        response_text = "\n\n".join([doc.page_content for doc in similar_docs])
+        # Step 2: Prepare context from retrieved documents
+        context_text = "\n\n".join([doc.page_content for doc in similar_docs])
+        
+        # Step 3: Ask GPT-3.5-Turbo to generate a response based on context
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an AI assistant that provides clear and concise legal explanations based on provided documents."},
+                {"role": "user", "content": f"Context:\n{context_text}\n\nQuestion: {user_message}"}
+            ],
+            max_tokens=1000,
+            temperature=0.7
+        )
 
-        # Ensure the response does not exceed 2000 characters
-        response_text = response_text[:2000]
-
-        await cl.Message(content=response_text).send()
+        # Extract and send the AI-generated response
+        answer = response.choices[0].message.content
+        await cl.Message(content=answer).send()
 
     except Exception as e:
         logging.error(f"Error during message processing: {str(e)}")
